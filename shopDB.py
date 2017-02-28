@@ -3,6 +3,7 @@
 
 import pymongo
 from datetime import datetime
+from binascii import hexlify
 
 class ShopDB:
 
@@ -11,17 +12,22 @@ class ShopDB:
     def __init__(self, address = "localhost", port = 27017):
         self.__client = pymongo.MongoClient(address, port)
         self.__db = self.__client.labshop
-        
-    def isMember(self, memberId):
-        return self.__db.member.find_one({"id": memberId}) != None
     
     def getMemberStatus(self, memberId):
         member = self.__db.member.find_one({"id": memberId})
-        return MemberStatus(member["name"], member["balance"])
+        return MemberStatus(memberId, member["name"], member["balance"])
     
-    # def addMember(self, memberId, memberName):
-    #     pass
-    
+    def checkMember(self, memberId, IDm, PMm):
+        IDm = hexlify(IDm)
+        PMm = hexlify(PMm)
+        member = self.__db.member.find_one({"id": memberId})
+        if member == None :
+            return False
+        if "IDm" not in member and "PMm" not in member :
+            self.__db.member.update_one({"id": memberId}, {"$set": {"IDm": IDm, "PMm": PMm}})
+            return True
+        return member["IDm"] == IDm and member["PMm"] == PMm
+
     def buyItem(self, memberId, itemId, count = 1):
         if count == 0 :
             return
@@ -53,7 +59,8 @@ class MemberStatus:
 
     '''利用者のデータクラス　名前と残高の表示に使うべし'''
     
-    def __init__(self, name, balance):
+    def __init__(self, memberId, name, balance):
+        self.memberId = int(memberId)
         self.name = name.encode("utf-8")
         self.balance = int(balance)
     

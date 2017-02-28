@@ -23,27 +23,26 @@ def on_connect(tag):
     # print 'name:', data.decode("shift-jis")
     # mongoDBのサーバにアクセスする,IPアドレスとポートはShopDBの第一・第二引数で変更できる
     # デフォルトはlocalhost:27017
-    sdb = ShopDB("192.168.1.173")
-    tag.studentNumber = None
-    if sdb.isMember(studentNumber) :
-        tag.studentNumber = studentNumber
+    sdb = ShopDB()
+    tag.memberStatus = None
+    if sdb.checkMember(studentNumber, idm, pmm) :
+        tag.memberStatus = sdb.getMemberStatus(studentNumber)
 
 def nfcCheck():
-    # nfcタグを感知すると読み取った学生番号を返す．
+    # nfcタグを感知すると読み取った学籍番号からMemberStatusのインスタンスを返す．
     # 認識できなかった場合・タグが学生証のものでない場合はNoneを返す
     with nfc.ContactlessFrontend('usb') as clf:
-        return clf.connect(rdwr={'on-connect': on_connect}).studentNumber
+        return clf.connect(rdwr={'on-connect': on_connect}).memberStatus
     
 # テスト用
 if __name__ == '__main__':
-    studentNumber = nfcCheck()
-    if studentNumber == None:
+    memberStatus = nfcCheck()
+    if memberStatus == None:
         exit()
-    print studentNumber
-    sdb = ShopDB("192.168.1.173")
-    print sdb.getMemberStatus(studentNumber)
+    print memberStatus
+    sdb = ShopDB()
     for food in sdb.getFoodList():
         print food
     for drink in sdb.getDrinkList():
         print drink
-    sdb.buyItem(studentNumber, 100401, 2)
+    sdb.buyItem(memberStatus.memberId, 100401, 1)
