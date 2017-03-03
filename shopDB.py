@@ -46,11 +46,11 @@ class ShopDB:
 
     def getFoodList(self):
         foods = self.__db.item.find({"isFood": True, "isOnSale":True})
-        return [ShopItem(foods[i]["id"], foods[i]["name"], foods[i]["price"], foods[i]["count"]) for i in xrange(foods.count())]
+        return [ShopItem(food["id"], food["name"], food["price"], food["count"]) for food in foods]
     
     def getDrinkList(self):
         drinks = self.__db.item.find({"isDrink": True, "isOnSale":True})
-        return [ShopItem(drinks[i]["id"], drinks[i]["name"], drinks[i]["price"], drinks[i]["count"]) for i in xrange(drinks.count())]
+        return [ShopItem(drink["id"], drink["name"], drink["price"], drink["count"]) for drink in drinks]
 
     def __del__(self):
         self.__client.close()
@@ -99,3 +99,12 @@ class ShortageException(Exception):
 
     def __str__(self):
         return self.message
+        
+
+if __name__ == "__main__":
+  '''テスト用'''
+  sdb = ShopDB("192.168.1.173");
+  for food in sdb.getFoodList():
+      print food
+  for drink in sdb.getDrinkList():
+      print drink
