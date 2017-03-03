@@ -39,16 +39,14 @@ class Ui_Form(object):
         self.verticalLayout.setSizeConstraint(QtGui.QLayout.SetDefaultConstraint)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
-        self.label = QtGui.QLabel(self.verticalLayoutWidget)
-        self.label.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.label.setAlignment(QtCore.Qt.AlignCenter)
-        self.label.setObjectName(_fromUtf8("label"))
-        self.verticalLayout.addWidget(self.label)
+        self.pushButton = QtGui.QPushButton(self.verticalLayoutWidget)
+        self.pushButton.setObjectName(_fromUtf8("pushButton"))
+        self.verticalLayout.addWidget(self.pushButton)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(_translate("Form", "Form", None))
-        self.label.setText(_translate("Form", "Hello, PyQt!", None))
+        self.pushButton.setText(_translate("Form", "Hello, PyQt!", None))
 

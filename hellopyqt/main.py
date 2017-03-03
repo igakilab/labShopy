@@ -9,25 +9,25 @@ class mainWindow(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
 		super(self.__class__, self).__init__()
 		self.setupUi(self)
 		
-class test1Widget(QtGui.QMainWindow, test1.Ui_Form):
-	def __init__(self):
-		super(self.__class__, self).__init__()
-		self.setupUi(self)
+class test1Widget(QtGui.QWidget, test1.Ui_Form):
+  def __init__(self):
+    super(self.__class__, self).__init__()
+    self.setupUi(self)
+    self.pushButton.clicked.connect(lambda: change(self, test2Widget))
 		
-class test2Widget(QtGui.QMainWindow, test2.Ui_Form):
-	def __init__(self):
-		super(self.__class__, self).__init__()
-		self.setupUi(self)
+class test2Widget(QtGui.QWidget, test2.Ui_Form):
+  def __init__(self):
+    super(self.__class__, self).__init__()
+    self.setupUi(self)
+    self.pushButton.clicked.connect(lambda: change(self, test1Widget))
 
-def change(window):
-	window.setCentralWidget(test2Widget())
+def change(widget, next):
+	widget.parentWidget().setCentralWidget(next())
   
 def main():
 	app = QtGui.QApplication(sys.argv)
 	window = mainWindow()
-	test1 = test1Widget()
-	window.setCentralWidget(test1)
-	test1.pushButton.clicked.connect(lambda: change(window))
+	window.setCentralWidget(test1Widget())
 	window.show()
 
 	app.exec_()
