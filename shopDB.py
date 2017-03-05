@@ -41,6 +41,7 @@ class ShopDB:
         lastAccountId = int(self.__db.account.find()[self.__db.account.count()-1]["id"])
         for i in xrange(count) :
             self.__db.account.insert_one({"id": lastAccountId + i + 1, "timestamp": datetime.utcnow(), "memberId": memberId, "itemId": itemId, "sellPrice": price})
+            self.__db.counter.update_one({"key": "account"}, {"$inc": {"counter": 1}});
         self.__db.member.update_one({"id": memberId}, {"$inc":{"balance":-(price * count)}})
         self.__db.item.update_one({"id": itemId}, {"$inc":{"count":-count}})
 
